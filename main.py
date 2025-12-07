@@ -1,3 +1,5 @@
+import sys
+
 # noinspection PyUnresolvedReferences
 import pygame
 
@@ -5,7 +7,7 @@ from player import Player
 from asteroid import Asteroid
 from asteroidfield import AsteroidField
 from constants import SCREEN_WIDTH, SCREEN_HEIGHT
-from logger import log_state
+from logger import log_state, log_event
 
 
 def main():
@@ -29,8 +31,17 @@ def main():
             if event.type == pygame.QUIT:
                 return
         screen.fill("black")
+        # Update loop
         for updatable_sprite in updatable:
            updatable_sprite.update(dt)
+
+        for asteroid in asteroids:
+            if asteroid.collides_with(player):
+                log_event("player_hit")
+                print("Game over!")
+                sys.exit()
+
+        # Drawable loop
         for drawable_sprite in drawable:
             drawable_sprite.draw(screen)
 
